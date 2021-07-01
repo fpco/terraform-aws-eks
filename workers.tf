@@ -334,7 +334,10 @@ resource "aws_launch_configuration" "workers" {
 
   lifecycle {
     create_before_destroy = true
-    prevent_destroy       = true
+    # This is false, because an upstream AMI update should allow our terraform
+    # plan and apply to proceed. It's not dangerous for aws_launch_configuration
+    # to be recreated.
+    prevent_destroy       = false
   }
 
   # Prevent premature access of security group roles and policies by pods that
