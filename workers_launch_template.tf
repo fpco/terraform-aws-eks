@@ -284,6 +284,7 @@ resource "aws_autoscaling_group" "workers_launch_template" {
   lifecycle {
     create_before_destroy = true
     ignore_changes        = [desired_capacity]
+    prevent_destroy       = true
   }
 }
 
@@ -572,6 +573,7 @@ resource "aws_launch_template" "workers_launch_template" {
 
   lifecycle {
     create_before_destroy = true
+    prevent_destroy       = true
   }
 
   # Prevent premature access of security group roles and policies by pods that
@@ -604,5 +606,6 @@ resource "aws_iam_instance_profile" "workers_launch_template" {
 
   lifecycle {
     create_before_destroy = true
+    prevent_destroy       = true
   }
 }
