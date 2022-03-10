@@ -542,6 +542,18 @@ variable "iam_role_use_name_prefix" {
   default     = true
 }
 
+variable "autoscaling_group_name" {
+  description = "Name to use on ASG created"
+  type        = string
+  default     = null
+}
+
+variable "autoscaling_group_use_name_prefix" {
+  description = "Determines whether ASG name (`autoscaling_group_name`) is used as a prefix"
+  type        = string
+  default     = false
+}
+
 variable "iam_role_path" {
   description = "IAM role path"
   type        = string
@@ -576,4 +588,10 @@ variable "iam_role_tags" {
   description = "A map of additional tags to add to the IAM role created"
   type        = map(string)
   default     = {}
+}
+
+variable "prefix_separator" {
+  description = "The separator to use between the prefix and the generated timestamp for resource names"
+  type        = string
+  default     = "-"
 }

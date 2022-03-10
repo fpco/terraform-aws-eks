@@ -106,7 +106,7 @@ resource "aws_security_group" "node" {
   count = local.create_node_sg ? 1 : 0
 
   name        = var.node_security_group_use_name_prefix ? null : local.node_sg_name
-  name_prefix = var.node_security_group_use_name_prefix ? "${local.node_sg_name}-" : null
+  name_prefix = var.node_security_group_use_name_prefix ? "${local.node_sg_name}${var.prefix_separator}" : null
   description = var.node_security_group_description
   vpc_id      = var.vpc_id
 
@@ -286,8 +286,12 @@ module "self_managed_node_group" {
   cluster_name = aws_eks_cluster.this[0].name
 
   # Autoscaling Group
-  name            = try(each.value.name, each.key)
-  use_name_prefix = try(each.value.use_name_prefix, var.self_managed_node_group_defaults.use_name_prefix, true)
+  name             = try(each.value.name, each.key)
+  prefix_separator = try(each.value.prefix_separator, var.prefix_separator)
+  use_name_prefix  = try(each.value.use_name_prefix, var.self_managed_node_group_defaults.use_name_prefix, true)
+
+  autoscaling_group_name = try(each.value.autoscaling_group_name, each.value.name, each.key)
+  autoscaling_group_use_name_prefix = try(each.value.autoscaling_group_use_name_prefix, false)
 
   availability_zones = try(each.value.availability_zones, var.self_managed_node_group_defaults.availability_zones, null)
   subnet_ids         = try(each.value.subnet_ids, var.self_managed_node_group_defaults.subnet_ids, var.subnet_ids)

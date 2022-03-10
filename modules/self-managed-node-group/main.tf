@@ -46,7 +46,7 @@ resource "aws_launch_template" "this" {
   count = var.create && var.create_launch_template ? 1 : 0
 
   name        = var.launch_template_use_name_prefix ? null : local.launch_template_name_int
-  name_prefix = var.launch_template_use_name_prefix ? "${local.launch_template_name_int}-" : null
+  name_prefix = var.launch_template_use_name_prefix ? "${local.launch_template_name_int}${var.prefix_separator}" : null
   description = var.launch_template_description
 
   ebs_optimized = var.ebs_optimized
@@ -252,13 +252,14 @@ locals {
   launch_template_name = try(aws_launch_template.this[0].name, var.launch_template_name)
   # Change order to allow users to set version priority before using defaults
   launch_template_version = coalesce(var.launch_template_version, try(aws_launch_template.this[0].default_version, "$Default"))
+
 }
 
 resource "aws_autoscaling_group" "this" {
   count = var.create ? 1 : 0
 
-  name        = var.use_name_prefix ? null : var.name
-  name_prefix = var.use_name_prefix ? "${var.name}-" : null
+  name        = var.autoscaling_group_use_name_prefix ? null : var.name
+  name_prefix = var.autoscaling_group_use_name_prefix ? var.autoscaling_group_name : null
 
   dynamic "launch_template" {
     for_each = var.use_mixed_instances_policy ? [] : [1]
@@ -450,7 +451,7 @@ resource "aws_security_group" "this" {
   count = local.create_security_group ? 1 : 0
 
   name        = var.security_group_use_name_prefix ? null : local.security_group_name
-  name_prefix = var.security_group_use_name_prefix ? "${local.security_group_name}-" : null
+  name_prefix = var.security_group_use_name_prefix ? "${local.security_group_name}${var.prefix_separator}" : null
   description = var.security_group_description
   vpc_id      = var.vpc_id
 
@@ -514,7 +515,7 @@ resource "aws_iam_role" "this" {
   count = var.create && var.create_iam_instance_profile ? 1 : 0
 
   name        = var.iam_role_use_name_prefix ? null : local.iam_role_name
-  name_prefix = var.iam_role_use_name_prefix ? "${local.iam_role_name}-" : null
+  name_prefix = var.iam_role_use_name_prefix ? "${local.iam_role_name}${var.prefix_separator}" : null
   path        = var.iam_role_path
   description = var.iam_role_description
 
@@ -543,7 +544,7 @@ resource "aws_iam_instance_profile" "this" {
   role = aws_iam_role.this[0].name
 
   name        = var.iam_role_use_name_prefix ? null : local.iam_role_name
-  name_prefix = var.iam_role_use_name_prefix ? "${local.iam_role_name}-" : null
+  name_prefix = var.iam_role_use_name_prefix ? "${local.iam_role_name}${var.prefix_separator}" : null
   path        = var.iam_role_path
 
   lifecycle {
