@@ -58,9 +58,9 @@ resource "aws_eks_cluster" "this" {
     aws_cloudwatch_log_group.this
   ]
 
-  # lifecycle {
-  #   prevent_destroy = true
-  # }
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 resource "aws_cloudwatch_log_group" "this" {

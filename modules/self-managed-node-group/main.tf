@@ -404,7 +404,7 @@ resource "aws_autoscaling_group" "this" {
     ignore_changes = [
       desired_capacity
     ]
-    # prevent_destroy = true
+    prevent_destroy = true
   }
 }
 
