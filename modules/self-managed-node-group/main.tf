@@ -420,7 +420,6 @@ resource "aws_autoscaling_group" "this" {
       desired_capacity,
       target_group_arns
     ]
-    prevent_destroy = true
   }
 }
 
