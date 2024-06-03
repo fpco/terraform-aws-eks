@@ -382,7 +382,7 @@ resource "aws_eks_node_group" "this" {
     ignore_changes = [
       scaling_config[0].desired_size,
     ]
-    prevent_destroy = true
+    prevent_destroy = false
   }
 
   tags = merge(
